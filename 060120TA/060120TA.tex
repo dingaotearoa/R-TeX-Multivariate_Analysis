@@ -1,0 +1,165 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[doublespacing]{setspace}
+\usepackage{textcomp}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[]{hyperref}
+\usepackage[pdftex]{graphicx}
+\usepackage{ctex}
+\usepackage{booktabs}
+\usepackage{subfigure}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{enumerate}
+\usepackage{bm}
+\usepackage{float}
+\usepackage{url}
+\usepackage[english]{babel}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{scalerel}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{comment}
+%\allowdisplaybreaks
+\renewcommand{\contentsname}{\centerline{Contents}}
+\pagestyle{fancy}
+\author{D}
+\def\name{D}
+\lhead{Multivariate Statistical Methods}
+\chead{}
+\rhead{\name}
+\cfoot{-\space\thepage\space-}
+\newtheorem{prob}{\bm{$Problem$}}
+\newtheorem{bonus}{\bm{$Bonus\;Problem$}}
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+\CTEXoptions[today=old]
+
+\begin{document}
+
+\title{Assignment Four}
+\date{\today}
+\maketitle
+\thispagestyle{fancy}
+
+\newpage
+
+\begin{prob}
+\end{prob}
+\begin{enumerate}[1)]
+\vspace{3mm}
+
+\item
+With {\fontfamily{ptm}\ttfamily lda} in R, we fit a linear discriminant analysis (LDA) model.\\
+Then we compute the misclassification errors on the training data and the test data, with {\fontfamily{ptm}\ttfamily table}.\\
+The misclassification error rate on the test data is 0.235.
+
+\item
+Using {\fontfamily{ptm}\ttfamily table} in R, we get a classification table on the test data.\\
+\begin{comment}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|c|cc|}
+\hline
+                                 & Count of predictions in Class 0 & Count of predictions in Class 1 \\ \hline
+Count of observations in Class 0 & 198                             & 25                              \\
+Count of observations in Class 1 & 46                              & 63                              \\ \hline
+\end{tabular}
+\caption{Classification for LDA on the training data}
+\end{table}
+\end{comment}
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|c|cc|}
+\hline
+                                 & Count of predictions in Class 0 & Count of predictions in Class 1 \\ \hline
+Count of observations in Class 0 & 114                             & 18                              \\
+Count of observations in Class 1 & 29                              & 39                              \\ \hline
+\end{tabular}
+\caption{Classification for LDA on the test data}
+\end{table}
+
+There are 29 patients with diabetes misclassified as healthy more than 18 healthy patients misclassified as having diabetes.\\
+% Class imbalance
+Patients with diabetes misclassified as healthy are more common in the test data.
+
+\item
+Similarly, with {\fontfamily{ptm}\ttfamily qda} in R, we fit a quadratic discriminant analysis (QDA) model.\\
+The misclassification error rate on the training data is 0.193.\\
+The misclassification error rate on the test data is 0.25.
+
+\item
+Using cross-validation in R, we get the cross-validation errors for both models.\\
+Then summarize the three types of misclassification error rates we get so far.\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|ccc|}
+\hline
+Model & Training error rate & Cross-validation error rate & Test error rate \\ \hline
+LDA   & 0.214               & 0.217                       & 0.235           \\
+QDA   & 0.193               & 0.223                       & 0.250           \\ \hline
+\end{tabular}
+\caption{Error rates for the two models on the same data}
+\end{table}
+
+We recommend the LDA model for diagnosing diabetes to the health organisation.\\
+LDA produce a lower error rate (or a higher accuracy) on the test data. That means the LDA model works better on the prediction using unobserved (or unlabelled) data, which are of the patients who have not been diagnosed whether they have diabetes. LDA also produces a lower error rate with cross-validation on the training data. This supports our view.\\
+Also, the reason that LDA works better is that the decision boundary tends to be linear because of the data with a relatively fixed covariance matrix. QDA produces a lower error rate on the training data, which is a sign of overfitting. That means QDA is unnecessarily complex and captures more noise than LDA.
+
+\item
+With {\fontfamily{ptm}\ttfamily glm} in R, we fit a logistic regression model.\\
+We use 0.5 as the threshold to make predictions.\\
+The misclassification error rate on the test data is 0.235.
+
+\item
+With {\fontfamily{ptm}\ttfamily summary}, we get the estimated coefficients in the logistic regression model.\\
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+Variable    & Estimated coefficients  \\ \hline
+(Intercept) & -9.514019               \\
+{\fontfamily{ptm}\ttfamily npreg}       & 0.140944               \\
+{\fontfamily{ptm}\ttfamily glu}         & 0.037481               \\
+{\fontfamily{ptm}\ttfamily bp}          & -0.008675              \\
+{\fontfamily{ptm}\ttfamily skin}        & 0.013167               \\
+{\fontfamily{ptm}\ttfamily bmi}         & 0.078951               \\
+{\fontfamily{ptm}\ttfamily ped}         & 1.110131               \\
+{\fontfamily{ptm}\ttfamily age}         & 0.018055               \\ \hline
+\end{tabular}
+\caption{Estimated coefficients in the logistic regression model}
+\end{table}
+
+Then we use the given values to compute
+\begin{align*}
+&-9.514019+0.140944\times5+0.037481\times111-0.008675\times81+0.013167\times33+0.078951\times25.1\\
+&+1.110131\times0.36+0.018055\times48\\
+&\approx-1.669.
+\end{align*}
+Referring to the lecture notes,\footnote{\;Li, T. (2020). \textit{Lecture notes in multivariate statistical methods}. Unpublished manuscript.} we have
+\begin{align*}
+ln(\frac{Pr(Y=1|\pmb{X})}{Pr(Y=0|\pmb{X})})&=-1.669\\
+\frac{Pr(Y=1|\pmb{X})}{Pr(Y=0|\pmb{X})}&\approx0.188,
+\end{align*}
+where $Y$ is the response variable and $\pmb{X}$ is the multiple explanatory variables.\\
+With $Pr(Y=1|\pmb{X})+Pr(Y=0|\pmb{X})=1$, solve the system,
+\begin{align*}
+Pr(Y=1|\pmb{X})\approx0.158,\\
+Pr(Y=0|\pmb{X})\approx0.842.
+\end{align*}
+We use 0.5 as the threshold to make predictions. The observation is classified into Class 0.\\
+That means the patient is diagnosed as healthy, without diabetes.
+\end{enumerate}
+
+\newpage
+
+\textbf{\textit{Appendix.}}\\
+
+R codes:
+\vspace{3mm}
+\lstinputlisting{p1a.R}
+\vspace{3mm}
+
+\end{document} 
